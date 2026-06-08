@@ -1,0 +1,170 @@
+Select * From dbo.cargo
+--Insert into dbo.cargo(cargo) values ('Administrador'),('Estilista'),('Manicurista'),('Masajista'),('Asistente')
+
+Select * From dbo.moneda
+--Insert into dbo.moneda(moneda) values ('Soles'),('Dolares'),('Euros'),('Yenes'),('Pesos Mexicanos')
+
+Select * From dbo.estado_cita
+--Insert into dbo.estado_cita(estado_cita) values ('Atendida'),('Cancelada'),('En proceso'),('Cambiada'),('Falto')
+
+Select * From dbo.tipo_documento
+--Insert into dbo.tipo_documento(tipo_documento) values ('DNI'),('Carnet_Extrajeria'),('RUC'),('Pasaporte'),('Carnet_migratorio')
+
+SELECT * FROM DBO.sexo
+--INSERT INTO DBO.sexo(sexo) VALUES ('Masculino'),('Femenino')
+
+
+INSERT INTO dbo.sede (sede, estado) VALUES
+('Sede Centro',1),
+('Sede Norte',1),
+('Sede Sur',1),
+('Sede Este',1),
+('Sede Oeste',1);
+
+INSERT INTO dbo.tipo_producto (tipo_producto, estado) VALUES
+('Shampoo',1),
+('Tinte',1),
+('Crema capilar',1),
+('Gel',1),
+('Esmalte',1);
+
+INSERT INTO dbo.tipo_transacciones (tipo_transacciones, estado) VALUES
+('Efectivo',1),
+('Tarjeta',1),
+('Yape',1),
+('Plin',1),
+('Transferencia',1);
+
+INSERT INTO dbo.servicio (servicio, estado) VALUES
+('Corte de cabello',1),
+('Tinte de cabello',1),
+('Manicure',1),
+('Masaje relajante',1),
+('Peinado',1);
+
+INSERT INTO dbo.persona
+(nombre, apellido_paterno, apellido_materno, tipo_documento_id, nro_documento, fecha_nacimiento, celular, direccion, sexo_id)
+VALUES
+('Carlos','Ramírez','Torres',1,'72581456','1995-04-12','987654321','Av. Los Olivos 123',1),
+('María','Gómez','Salas',1,'74859632','1998-07-20','987111222','Jr. Las Flores 456',2),
+('Luis','Pérez','Rojas',1,'70124589','1990-01-15','986222333','Av. Central 789',1),
+('Ana','Torres','Vega',1,'73214598','1997-11-08','985333444','Calle Lima 321',2),
+('Sofía','Castillo','Mendoza',1,'76543210','2000-03-25','984444555','Av. Perú 654',2),
+('Jorge','Mendoza','Flores',1,'71234567','1988-05-10','983555666','Av. Grau 101',1),
+('Lucía','Vargas','Díaz',1,'72345678','1992-09-18','982666777','Jr. Unión 202',2),
+('Pedro','Campos','Reyes',1,'73456789','1985-12-30','981777888','Calle Real 303',1),
+('Valeria','Ríos','Navarro',1,'74567890','1999-06-14','980888999','Av. Primavera 404',2),
+('Diego','Herrera','León',1,'75678901','1993-02-22','979999000','Jr. Progreso 505',1),
+('Camila','Morales','Paredes',1,'76789012','1996-10-05','978888111','Av. Arequipa 120',2),
+('Renato','Salazar','Quispe',1,'77890123','1991-07-17','977777222','Jr. Cusco 240',1),
+('Fernanda','Vega','Campos',1,'78901234','1994-03-09','976666333','Av. Brasil 360',2),
+('Miguel','Rojas','Soto',1,'79012345','1989-01-28','975555444','Calle Tacna 480',1),
+('Daniela','Navarro','Cruz',1,'70123456','2001-12-11','974444555','Av. Colonial 600',2),
+('Andrés','Flores','Luna',1,'71239876','1993-06-21','973333666','Jr. Libertad 710',1),
+('Paola','Reyes','Mori',1,'72340987','1997-08-13','972222777','Av. Universitaria 820',2),
+('Ricardo','León','Pinto',1,'73451098','1987-04-04','971111888','Calle Comercio 930',1),
+('Natalia','Díaz','Mejía',1,'74562109','1998-09-29','970000999','Av. Grau 1040',2),
+('Bruno','Torres','Aguilar',1,'75673210','1992-02-18','969999000','Jr. Amazonas 1150',1);
+
+INSERT INTO dbo.cliente (persona_id, estado) VALUES
+(1,1),(2,1),(3,1),(4,1),(5,1),
+(11,1),(12,1),(13,1),(14,1),(15,1);
+
+INSERT INTO dbo.empleado
+(persona_id, fecha_ingreso, sede_id, cargo_id, estado)
+VALUES
+(6,'2023-01-10',1,1,1),
+(7,'2023-03-15',2,2,1),
+(8,'2022-11-20',3,3,1),
+(9,'2024-02-01',4,4,1),
+(10,'2023-08-05',5,5,1);
+
+INSERT INTO dbo.usuario (empleado_id, usuario, contraseña) VALUES
+(1,'admin','123456'),
+(2,'estilista1','123456'),
+(3,'manicurista1','123456'),
+(4,'masajista1','123456'),
+(5,'asistente1','123456');
+
+INSERT INTO dbo.inventario
+(nombre_producto, tipo_producto_id, stoct, fecha_vencimiento)
+VALUES
+('Shampoo Keratina',1,25,'2026-12-31'),
+('Tinte Rubio',2,18,'2026-08-15'),
+('Crema Hidratante',3,30,'2027-01-20'),
+('Gel Fijador',4,20,'2026-10-10'),
+('Esmalte Rojo',5,40,'2027-05-05');
+
+
+INSERT INTO dbo.cita
+(fecha_cita, detalle_cita, cliente_id, estado_cita_id, empleado_id)
+VALUES
+('2025-06-10 09:00','Corte clásico',1,3,2),
+('2025-06-10 10:00','Tinte completo',2,3,2),
+('2025-06-10 11:00','Manicure básica',3,3,3),
+('2025-06-10 12:00','Masaje relajante',4,3,4),
+('2025-06-10 13:00','Peinado para evento',5,3,5),
+('2025-06-11 09:00','Corte moderno',6,3,2),
+('2025-06-11 10:00','Tinte castaño',7,3,2),
+('2025-06-11 11:00','Manicure francesa',8,3,3),
+('2025-06-11 12:00','Masaje antiestrés',9,3,4),
+('2025-06-11 13:00','Peinado casual',10,3,5),
+('2025-06-12 09:00','Corte degradado',1,3,2),
+('2025-06-12 10:00','Tinte negro',2,3,2),
+('2025-06-12 11:00','Manicure con diseño',3,3,3),
+('2025-06-12 12:00','Masaje corporal',4,3,4),
+('2025-06-12 13:00','Peinado elegante',5,3,5),
+('2025-06-13 09:00','Corte infantil',6,3,2),
+('2025-06-13 10:00','Tinte fantasía',7,3,2),
+('2025-06-13 11:00','Manicure express',8,3,3),
+('2025-06-13 12:00','Masaje espalda',9,3,4),
+('2025-06-13 13:00','Peinado de fiesta',10,3,5);
+
+INSERT INTO dbo.servicio_cita
+(servicio_id, cita_id, precio, cantidad)
+VALUES
+(1,1,25.00,1),(2,2,80.00,1),(3,3,35.00,1),(4,4,70.00,1),(5,5,60.00,1),
+(1,6,30.00,1),(2,7,85.00,1),(3,8,40.00,1),(4,9,75.00,1),(5,10,55.00,1),
+(1,11,28.00,1),(2,12,78.00,1),(3,13,45.00,1),(4,14,90.00,1),(5,15,65.00,1),
+(1,16,22.00,1),(2,17,95.00,1),(3,18,30.00,1),(4,19,60.00,1),(5,20,70.00,1);
+
+INSERT INTO dbo.inventario_servicio
+(inventario_id, servicio_id, cantidad_usada)
+VALUES
+(1,1,1),(2,2,1),(5,3,2),(3,4,1),(4,5,1),
+(1,1,1),(2,2,1),(5,3,1),(3,4,1),(4,5,1),
+(1,1,1),(2,2,1),(5,3,2),(3,4,1),(4,5,1),
+(1,1,1),(2,2,1),(5,3,1),(3,4,1),(4,5,1);
+
+INSERT INTO dbo.venta
+(nro_operacion, fecha_venta, nro_serie, nro_documento, usuario_id, moneda_id, tipo_transacciones_id)
+VALUES
+('OP001','2025-06-10 09:45','B001','000001',1,1,1),
+('OP002','2025-06-10 10:45','B001','000002',2,1,2),
+('OP003','2025-06-10 11:45','B001','000003',3,1,3),
+('OP004','2025-06-10 12:45','B001','000004',4,1,4),
+('OP005','2025-06-10 13:45','B001','000005',5,1,5),
+('OP006','2025-06-11 09:45','B001','000006',1,1,1),
+('OP007','2025-06-11 10:45','B001','000007',2,1,2),
+('OP008','2025-06-11 11:45','B001','000008',3,1,3),
+('OP009','2025-06-11 12:45','B001','000009',4,1,4),
+('OP010','2025-06-11 13:45','B001','000010',5,1,5),
+('OP011','2025-06-12 09:45','B001','000011',1,1,1),
+('OP012','2025-06-12 10:45','B001','000012',2,1,2),
+('OP013','2025-06-12 11:45','B001','000013',3,1,3),
+('OP014','2025-06-12 12:45','B001','000014',4,1,4),
+('OP015','2025-06-12 13:45','B001','000015',5,1,5),
+('OP016','2025-06-13 09:45','B001','000016',1,1,1),
+('OP017','2025-06-13 10:45','B001','000017',2,1,2),
+('OP018','2025-06-13 11:45','B001','000018',3,1,3),
+('OP019','2025-06-13 12:45','B001','000019',4,1,4),
+('OP020','2025-06-13 13:45','B001','000020',5,1,5);
+
+INSERT INTO dbo.detalle_venta
+(venta_id, servicio_id, monto, descuento, cantidad)
+VALUES
+(1,1,25.00,0.00,1),(2,2,80.00,5.00,1),(3,3,35.00,0.00,1),(4,4,70.00,0.00,1),(5,5,60.00,10.00,1),
+(6,1,30.00,0.00,1),(7,2,85.00,5.00,1),(8,3,40.00,0.00,1),(9,4,75.00,0.00,1),(10,5,55.00,5.00,1),
+(11,1,28.00,0.00,1),(12,2,78.00,0.00,1),(13,3,45.00,5.00,1),(14,4,90.00,10.00,1),(15,5,65.00,0.00,1),
+(16,1,22.00,0.00,1),(17,2,95.00,10.00,1),(18,3,30.00,0.00,1),(19,4,60.00,0.00,1),(20,5,70.00,5.00,1);
+
