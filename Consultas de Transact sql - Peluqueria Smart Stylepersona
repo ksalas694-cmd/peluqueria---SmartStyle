@@ -1,0 +1,194 @@
+--CONSULTAS BÁSICAS E INTERMEDIAS--
+
+-- 1. Listar todas las personas
+SELECT *
+FROM dbo.persona;
+
+-- 2. Mostrar nombres completos
+SELECT 
+    persona_id,
+    nombre + ' ' + apellido_paterno + ' ' + apellido_materno AS nombre_completo
+FROM dbo.persona;
+
+-- 3. Buscar personas por apellido paterno
+SELECT *
+FROM dbo.persona
+WHERE apellido_paterno = 'Ramírez';
+
+-- 4. Listar personas ordenadas alfabéticamente
+SELECT *
+FROM dbo.persona
+ORDER BY apellido_paterno, apellido_materno, nombre;
+
+-- 5. Mostrar personas de sexo femenino
+SELECT 
+    p.persona_id,
+    p.nombre,
+    p.apellido_paterno,
+    p.apellido_materno,
+    s.sexo
+FROM dbo.persona p
+INNER JOIN dbo.sexo s ON p.sexo_id = s.sexo_id
+WHERE s.sexo = 'Femenino';
+
+-- 6. Mostrar personas con tipo de documento
+SELECT 
+    p.persona_id,
+    p.nombre,
+    p.apellido_paterno,
+    td.tipo_documento,
+    p.nro_documento
+FROM dbo.persona p
+INNER JOIN dbo.tipo_documento td 
+    ON p.tipo_documento_id = td.tipo_documento_id;
+
+-- 7. Contar personas registradas
+SELECT COUNT(*) AS total_personas
+FROM dbo.persona;
+
+-- 8. Contar personas por sexo
+SELECT 
+    s.sexo,
+    COUNT(*) AS total
+FROM dbo.persona p
+INNER JOIN dbo.sexo s ON p.sexo_id = s.sexo_id
+GROUP BY s.sexo;
+
+-- 9. Mostrar personas nacidas después de 1995
+SELECT *
+FROM dbo.persona
+WHERE fecha_nacimiento > '1995-01-01';
+
+-- 10. Mostrar edad aproximada de cada persona
+SELECT
+    persona_id,
+    nombre,
+    apellido_paterno,
+    DATEDIFF(YEAR, fecha_nacimiento, GETDATE()) AS edad
+FROM dbo.persona;
+
+
+--CONSULTAS AVANZADAS Y EXPERTAS--
+
+-- 11. Calcular edad exacta
+SELECT
+    persona_id,
+    nombre,
+    apellido_paterno,
+    apellido_materno,
+    fecha_nacimiento,
+    DATEDIFF(YEAR, fecha_nacimiento, GETDATE())
+    - CASE 
+        WHEN DATEADD(YEAR, DATEDIFF(YEAR, fecha_nacimiento, GETDATE()), fecha_nacimiento) > GETDATE()
+        THEN 1 ELSE 0
+      END AS edad_exacta
+FROM dbo.persona;
+
+-- 12. Clasificar personas por rango de edad
+SELECT
+    persona_id,
+    nombre,
+    apellido_paterno,
+    fecha_nacimiento,
+    CASE
+        WHEN DATEDIFF(YEAR, fecha_nacimiento, GETDATE()) < 18 THEN 'Menor de edad'
+        WHEN DATEDIFF(YEAR, fecha_nacimiento, GETDATE()) BETWEEN 18 AND 30 THEN 'Joven'
+        WHEN DATEDIFF(YEAR, fecha_nacimiento, GETDATE()) BETWEEN 31 AND 50 THEN 'Adulto'
+        ELSE 'Adulto mayor'
+    END AS rango_edad
+FROM dbo.persona;
+
+-- 13. Identificar si una persona es cliente o empleado
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno + ' ' + p.apellido_materno AS nombre_completo,
+    CASE 
+        WHEN c.cliente_id IS NOT NULL AND e.empleado_id IS NOT NULL THEN 'Cliente y empleado'
+        WHEN c.cliente_id IS NOT NULL THEN 'Cliente'
+        WHEN e.empleado_id IS NOT NULL THEN 'Empleado'
+        ELSE 'Sin rol'
+    END AS tipo_persona
+FROM dbo.persona p
+LEFT JOIN dbo.cliente c ON p.persona_id = c.persona_id
+LEFT JOIN dbo.empleado e ON p.persona_id = e.persona_id;
+
+-- 14. Listar clientes con cantidad de citas
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno AS cliente,
+    COUNT(ci.cita_id) AS total_citas
+FROM dbo.persona p
+INNER JOIN dbo.cliente c ON p.persona_id = c.persona_id
+LEFT JOIN dbo.cita ci ON c.cliente_id = ci.cliente_id
+GROUP BY p.persona_id, p.nombre, p.apellido_paterno;
+
+-- 15. Listar empleados con sede y cargo
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno AS empleado,
+    ca.cargo,
+    se.sede,
+    e.fecha_ingreso
+FROM dbo.persona p
+INNER JOIN dbo.empleado e ON p.persona_id = e.persona_id
+INNER JOIN dbo.cargo ca ON e.cargo_id = ca.cargo_id
+INNER JOIN dbo.sede se ON e.sede_id = se.sede_id;
+
+-- 16. Ranking de clientes por cantidad de citas
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno AS cliente,
+    COUNT(ci.cita_id) AS total_citas,
+    RANK() OVER (ORDER BY COUNT(ci.cita_id) DESC) AS ranking_citas
+FROM dbo.persona p
+INNER JOIN dbo.cliente c ON p.persona_id = c.persona_id
+LEFT JOIN dbo.cita ci ON c.cliente_id = ci.cliente_id
+GROUP BY p.persona_id, p.nombre, p.apellido_paterno;
+
+-- 17. Obtener la última cita de cada cliente
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno AS cliente,
+    MAX(ci.fecha_cita) AS ultima_cita
+FROM dbo.persona p
+INNER JOIN dbo.cliente c ON p.persona_id = c.persona_id
+INNER JOIN dbo.cita ci ON c.cliente_id = ci.cliente_id
+GROUP BY p.persona_id, p.nombre, p.apellido_paterno;
+
+-- 18. Personas con documentos duplicados
+SELECT
+    nro_documento,
+    COUNT(*) AS cantidad
+FROM dbo.persona
+GROUP BY nro_documento
+HAVING COUNT(*) > 1;
+
+-- 19. Clientes que gastaron más de 100 en ventas
+SELECT
+    p.persona_id,
+    p.nombre + ' ' + p.apellido_paterno AS cliente,
+    SUM(dv.monto - dv.descuento) AS total_gastado
+FROM dbo.persona p
+INNER JOIN dbo.cliente c ON p.persona_id = c.persona_id
+INNER JOIN dbo.cita ci ON c.cliente_id = ci.cliente_id
+INNER JOIN dbo.servicio_cita sc ON ci.cita_id = sc.cita_id
+INNER JOIN dbo.detalle_venta dv ON sc.servicio_id = dv.servicio_id
+GROUP BY p.persona_id, p.nombre, p.apellido_paterno
+HAVING SUM(dv.monto - dv.descuento) > 100;
+
+-- 20. CTE para obtener clientes frecuentes
+WITH CitasCliente AS (
+    SELECT
+        c.cliente_id,
+        p.persona_id,
+        p.nombre + ' ' + p.apellido_paterno AS cliente,
+        COUNT(ci.cita_id) AS total_citas
+    FROM dbo.persona p
+    INNER JOIN dbo.cliente c ON p.persona_id = c.persona_id
+    LEFT JOIN dbo.cita ci ON c.cliente_id = ci.cliente_id
+    GROUP BY c.cliente_id, p.persona_id, p.nombre, p.apellido_paterno
+)
+SELECT *
+FROM CitasCliente
+WHERE total_citas >= 2
+ORDER BY total_citas DESC;
